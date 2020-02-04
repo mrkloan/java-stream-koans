@@ -26,7 +26,7 @@ class Exercise01 extends OnlineStore {
         assertThat(isLambda(richCustomerCondition)).isTrue();
         List<Customer> richCustomer = richCustomerStream.collect(Collectors.toList());
         assertThat(richCustomer).hasSize(2);
-        assertThat(richCustomer).contains(customerList.get(3), customerList.get(7));
+        assertThat(richCustomer).containsExactly(customerList.get(3), customerList.get(7));
     }
 
     /**
@@ -44,6 +44,6 @@ class Exercise01 extends OnlineStore {
         assertThat(isLambda(getAgeFunction)).isTrue();
         List<Integer> ages = ageStream.collect(Collectors.toList());
         assertThat(ages).hasSize(10);
-        assertThat(ages).contains(22, 27, 28, 38, 26, 22, 32, 35, 21, 36);
+        assertThat(ages).containsExactly(22, 27, 28, 38, 26, 22, 32, 35, 21, 36);
     }
 }

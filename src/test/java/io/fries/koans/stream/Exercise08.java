@@ -23,7 +23,7 @@ class Exercise08 extends OnlineStore {
         Set<String> itemSetNotOnSale = null;
 
         assertThat(itemSetNotOnSale).hasSize(3);
-        assertThat(itemSetNotOnSale).contains("bag", "pants", "coat");
+        assertThat(itemSetNotOnSale).containsExactlyInAnyOrder("bag", "pants", "coat");
     }
 
     /**
@@ -42,6 +42,6 @@ class Exercise08 extends OnlineStore {
         List<String> customerNameList = null;
 
         assertThat(customerNameList).hasSize(7);
-        assertThat(customerNameList).contains("Joe", "Patrick", "Chris", "Kathy", "Alice", "Andrew", "Amy");
+        assertThat(customerNameList).containsExactly("Joe", "Patrick", "Chris", "Kathy", "Alice", "Andrew", "Amy");
     }
 }

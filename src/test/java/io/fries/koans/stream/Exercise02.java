@@ -23,7 +23,7 @@ class Exercise02 extends OnlineStore {
         Stream<Integer> sortedAgeStream = null;
 
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
-        assertThat(sortedAgeList).contains(21, 22, 22, 26, 27, 28, 32, 35, 36, 38);
+        assertThat(sortedAgeList).containsExactly(21, 22, 22, 26, 27, 28, 32, 35, 36, 38);
     }
 
     /**
@@ -38,7 +38,7 @@ class Exercise02 extends OnlineStore {
 
         assertThat(isLambda(descOrder)).isTrue();
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
-        assertThat(sortedAgeList).contains(38, 36, 35, 32, 28, 27, 26, 22, 22, 21);
+        assertThat(sortedAgeList).containsExactly(38, 36, 35, 32, 28, 27, 26, 22, 22, 21);
     }
 
     /**
@@ -51,7 +51,7 @@ class Exercise02 extends OnlineStore {
         Stream<String> top3RichCustomerStream = null;
 
         List<String> top3RichCustomerList = top3RichCustomerStream.collect(Collectors.toList());
-        assertThat(top3RichCustomerList).contains("Diana", "Andrew", "Chris");
+        assertThat(top3RichCustomerList).containsExactly("Diana", "Andrew", "Chris");
     }
 
     /**
@@ -64,7 +64,7 @@ class Exercise02 extends OnlineStore {
         Stream<Integer> distinctAgeStream = null;
 
         List<Integer> distinctAgeList = distinctAgeStream.collect(Collectors.toList());
-        assertThat(distinctAgeList).contains(22, 27, 28, 38, 26, 32, 35, 21, 36);
+        assertThat(distinctAgeList).containsExactly(22, 27, 28, 38, 26, 32, 35, 21, 36);
     }
 
     /**
@@ -80,7 +80,7 @@ class Exercise02 extends OnlineStore {
 
         assertThat(isLambda(getItemStream)).isTrue();
         List<String> itemList = itemStream.collect(Collectors.toList());
-        assertThat(itemList).contains(
+        assertThat(itemList).containsExactly(
                 "small table", "plate", "fork", "ice cream", "screwdriver", "cable", "earphone", "onion",
                 "ice cream", "crisps", "chopsticks", "cable", "speaker", "headphone", "saw", "bond",
                 "plane", "bag", "cold medicine", "chair", "desk", "pants", "coat", "cup", "plate", "fork",
