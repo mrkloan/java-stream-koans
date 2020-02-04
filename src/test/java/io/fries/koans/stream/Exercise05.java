@@ -2,10 +2,7 @@ package io.fries.koans.stream;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,7 +17,9 @@ class Exercise05 extends OnlineStore {
     void name_list() {
         List<Customer> customerList = mall.getCustomers();
 
-        List<String> nameList = null;
+        List<String> nameList = customerList.stream()
+                .map(Customer::getName)
+                .collect(Collectors.toList());
 
         assertThat(nameList).containsExactly(
                 "Joe", "Steven", "Patrick", "Diana", "Chris", "Kathy", "Alice", "Andrew", "Martin", "Amy"
@@ -34,7 +33,9 @@ class Exercise05 extends OnlineStore {
     void age_set() {
         List<Customer> customerList = mall.getCustomers();
 
-        Set<Integer> ageSet = null;
+        Set<Integer> ageSet = customerList.stream()
+                .map(Customer::getAge)
+                .collect(Collectors.toSet());
 
         assertThat(ageSet).hasSize(9);
         assertThat(ageSet).containsExactlyInAnyOrder(21, 22, 26, 27, 28, 32, 35, 36, 38);
@@ -47,7 +48,9 @@ class Exercise05 extends OnlineStore {
     void name_in_csv() {
         List<Customer> customerList = mall.getCustomers();
 
-        String string = null;
+        String string = customerList.stream()
+                .map(Customer::getName)
+                .collect(Collectors.joining(",", "[", "]"));
 
         assertThat(string).isEqualTo("[Joe,Steven,Patrick,Diana,Chris,Kathy,Alice,Andrew,Martin,Amy]");
     }
@@ -60,7 +63,8 @@ class Exercise05 extends OnlineStore {
     void oldest_customer() {
         List<Customer> customerList = mall.getCustomers();
 
-        Optional<Customer> oldestCustomer = null;
+        Optional<Customer> oldestCustomer = customerList.stream()
+                .max(Comparator.comparing(Customer::getAge));
 
         assertThat(oldestCustomer.get()).isEqualTo(customerList.get(3));
     }
@@ -73,7 +77,8 @@ class Exercise05 extends OnlineStore {
     void age_distribution() {
         List<Customer> customerList = mall.getCustomers();
 
-        Map<Integer, Long> ageDistribution = null;
+        Map<Integer, Long> ageDistribution = customerList.stream()
+                .collect(Collectors.groupingBy(Customer::getAge, Collectors.counting()));
 
         assertThat(ageDistribution).hasSize(9);
         ageDistribution.forEach((age, numberOfCustomers) -> {

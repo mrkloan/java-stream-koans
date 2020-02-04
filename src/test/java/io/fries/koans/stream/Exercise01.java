@@ -20,8 +20,9 @@ class Exercise01 extends OnlineStore {
     void find_rich_customers() {
         List<Customer> customerList = mall.getCustomers();
 
-        Predicate<Customer> richCustomerCondition = null;
-        Stream<Customer> richCustomerStream = null;
+        Predicate<Customer> richCustomerCondition = customer -> customer.getBudget() > 10000;
+        Stream<Customer> richCustomerStream = customerList.stream()
+                .filter(richCustomerCondition);
 
         assertThat(isLambda(richCustomerCondition)).isTrue();
         List<Customer> richCustomer = richCustomerStream.collect(Collectors.toList());
@@ -38,8 +39,9 @@ class Exercise01 extends OnlineStore {
     void how_old_are_the_customers() {
         List<Customer> customerList = mall.getCustomers();
 
-        Function<Customer, Integer> getAgeFunction = null;
-        Stream<Integer> ageStream = null;
+        Function<Customer, Integer> getAgeFunction = Customer::getAge;
+        Stream<Integer> ageStream = customerList.stream()
+                .map(getAgeFunction);
 
         assertThat(isLambda(getAgeFunction)).isTrue();
         List<Integer> ages = ageStream.collect(Collectors.toList());

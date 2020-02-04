@@ -20,8 +20,8 @@ class Exercise07 extends OnlineStore {
     void average_age() {
         List<Customer> customerList = mall.getCustomers();
 
-        IntStream ageStream = null;
-        OptionalDouble average = null;
+        IntStream ageStream = customerList.stream().mapToInt(Customer::getAge);
+        OptionalDouble average = ageStream.average();
 
         assertThat(average.getAsDouble()).isEqualTo(28.7);
     }
@@ -34,8 +34,12 @@ class Exercise07 extends OnlineStore {
     void how_much_to_buy_all_items() {
         List<Shop> shopList = mall.getShops();
 
-        LongStream priceStream = null;
-        long priceSum = 0;
+        LongStream priceStream = shopList.stream()
+                .map(Shop::getItems)
+                .flatMap(List::stream)
+                .mapToLong(Item::getPrice);
+
+        long priceSum = priceStream.sum();
 
         assertThat(priceSum).isEqualTo(60930L);
     }

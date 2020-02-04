@@ -20,7 +20,9 @@ class Exercise02 extends OnlineStore {
     void sort_by_age() {
         List<Customer> customerList = mall.getCustomers();
 
-        Stream<Integer> sortedAgeStream = null;
+        Stream<Integer> sortedAgeStream = customerList.stream()
+                .map(Customer::getAge)
+                .sorted();
 
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
         assertThat(sortedAgeList).containsExactly(21, 22, 22, 26, 27, 28, 32, 35, 36, 38);
@@ -33,8 +35,10 @@ class Exercise02 extends OnlineStore {
     void desc_sort_by_age() {
         List<Customer> customerList = mall.getCustomers();
 
-        Comparator<Integer> descOrder = null;
-        Stream<Integer> sortedAgeStream = null;
+        Comparator<Integer> descOrder = (c1, c2) -> c2.compareTo(c1);
+        Stream<Integer> sortedAgeStream = customerList.stream()
+                .map(Customer::getAge)
+                .sorted(descOrder);
 
         assertThat(isLambda(descOrder)).isTrue();
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
@@ -48,7 +52,10 @@ class Exercise02 extends OnlineStore {
     void top_3_rich_customer() {
         List<Customer> customerList = mall.getCustomers();
 
-        Stream<String> top3RichCustomerStream = null;
+        Stream<String> top3RichCustomerStream = customerList.stream()
+                .sorted(Comparator.comparing(Customer::getBudget).reversed())
+                .map(Customer::getName)
+                .limit(3);
 
         List<String> top3RichCustomerList = top3RichCustomerStream.collect(Collectors.toList());
         assertThat(top3RichCustomerList).containsExactly("Diana", "Andrew", "Chris");
@@ -61,7 +68,9 @@ class Exercise02 extends OnlineStore {
     void distinct_age() {
         List<Customer> customerList = mall.getCustomers();
 
-        Stream<Integer> distinctAgeStream = null;
+        Stream<Integer> distinctAgeStream = customerList.stream()
+                .map(Customer::getAge)
+                .distinct();
 
         List<Integer> distinctAgeList = distinctAgeStream.collect(Collectors.toList());
         assertThat(distinctAgeList).containsExactly(22, 27, 28, 38, 26, 32, 35, 21, 36);
@@ -75,8 +84,10 @@ class Exercise02 extends OnlineStore {
     void items_customers_want_to_buy() {
         List<Customer> customerList = mall.getCustomers();
 
-        Function<Customer, Stream<Item>> getItemStream = null;
-        Stream<String> itemStream = null;
+        Function<Customer, Stream<Item>> getItemStream = customer -> customer.getWantsToBuy().stream();
+        Stream<String> itemStream = customerList.stream()
+                .flatMap(getItemStream)
+                .map(Item::getName);
 
         assertThat(isLambda(getItemStream)).isTrue();
         List<String> itemList = itemStream.collect(Collectors.toList());

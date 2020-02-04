@@ -18,7 +18,7 @@ class Exercise04 extends OnlineStore {
     void first_registrant() {
         List<Customer> customerList = mall.getCustomers();
 
-        Optional<Customer> firstCustomer = null;
+        Optional<Customer> firstCustomer = customerList.stream().findFirst();
 
         assertThat(firstCustomer.get()).isEqualTo(customerList.get(0));
     }
@@ -30,7 +30,9 @@ class Exercise04 extends OnlineStore {
     void is_there_anyone_older_than_40() {
         List<Customer> customerList = mall.getCustomers();
 
-        boolean olderThan40Exists = true;
+        boolean olderThan40Exists = customerList.stream()
+                .map(Customer::getAge)
+                .anyMatch(age -> age > 40);
 
         assertThat(olderThan40Exists).isFalse();
     }
@@ -42,7 +44,9 @@ class Exercise04 extends OnlineStore {
     void is_everybody_older_than_20() {
         List<Customer> customerList = mall.getCustomers();
 
-        boolean allOlderThan20 = false;
+        boolean allOlderThan20 = customerList.stream()
+                .map(Customer::getAge)
+                .allMatch(age -> age > 20);
 
         assertThat(allOlderThan20).isTrue();
     }
@@ -55,7 +59,9 @@ class Exercise04 extends OnlineStore {
     void everyone_wants_something() {
         List<Customer> customerList = mall.getCustomers();
 
-        boolean everyoneWantsSomething = false;
+        boolean everyoneWantsSomething = customerList.stream()
+                .map(Customer::getWantsToBuy)
+                .noneMatch(List::isEmpty);
 
         assertThat(everyoneWantsSomething).isTrue();
     }

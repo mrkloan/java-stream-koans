@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,8 +21,17 @@ class Exercise08 extends OnlineStore {
         Stream<Customer> customerStream = mall.getCustomers().stream();
         Stream<Shop> shopStream = mall.getShops().stream();
 
-        List<String> itemListOnSale = null;
-        Set<String> itemSetNotOnSale = null;
+        List<String> itemListOnSale = shopStream
+                .flatMap(shop -> shop.getItems().stream())
+                .map(Item::getName)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Set<String> itemSetNotOnSale = customerStream
+                .flatMap(customer -> customer.getWantsToBuy().stream())
+                .map(Item::getName)
+                .filter(item -> !itemListOnSale.contains(item))
+                .collect(Collectors.toSet());
 
         assertThat(itemSetNotOnSale).hasSize(3);
         assertThat(itemSetNotOnSale).containsExactlyInAnyOrder("bag", "pants", "coat");
@@ -37,9 +48,28 @@ class Exercise08 extends OnlineStore {
         Stream<Customer> customerStream = mall.getCustomers().stream();
         Stream<Shop> shopStream = mall.getShops().stream();
 
-        List<Item> onSale = null;
-        Predicate<Customer> havingEnoughMoney = null;
-        List<String> customerNameList = null;
+        List<Item> onSale = shopStream
+                .flatMap(shop -> shop.getItems().stream())
+                .distinct()
+                .collect(Collectors.toList());
+
+        ToLongFunction<Item> findWantedItemPrice = wantedItem -> onSale.stream()
+                .filter(onSaleItem -> onSaleItem.getName().equals(wantedItem.getName()))
+                .map(Item::getPrice)
+                .sorted()
+                .findFirst()
+                .orElse(0);
+
+        Predicate<Customer> havingEnoughMoney = customer -> customer
+                .getWantsToBuy()
+                .stream()
+                .mapToLong(findWantedItemPrice)
+                .sum() <= customer.getBudget();
+
+        List<String> customerNameList = customerStream
+                .filter(havingEnoughMoney)
+                .map(Customer::getName)
+                .collect(Collectors.toList());
 
         assertThat(customerNameList).hasSize(7);
         assertThat(customerNameList).containsExactly("Joe", "Patrick", "Chris", "Kathy", "Alice", "Andrew", "Amy");

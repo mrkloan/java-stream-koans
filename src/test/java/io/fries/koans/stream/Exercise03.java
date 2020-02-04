@@ -18,7 +18,14 @@ class Exercise03 extends OnlineStore {
     void how_many_items_wanted() {
         List<Customer> customerList = mall.getCustomers();
 
-        long sum = 0L;
+        long sum = customerList.stream()
+                .flatMap(customer -> customer.getWantsToBuy().stream())
+                .count();
+
+        // Autre implémentation possible
+//        long sum = customerList.stream()
+//                .mapToLong(customer -> customer.getWantsToBuy().size())
+//                .sum();
 
         assertThat(sum).isEqualTo(32L);
     }
@@ -31,8 +38,10 @@ class Exercise03 extends OnlineStore {
     void richest_customer() {
         List<Customer> customerList = mall.getCustomers();
 
-        Comparator<Integer> comparator = null;
-        Optional<Integer> richestCustomer = null;
+        Comparator<Integer> comparator = Comparator.naturalOrder();
+        Optional<Integer> richestCustomer = customerList.stream()
+                .map(Customer::getBudget)
+                .max(comparator);
 
         assertThat(comparator.getClass().getSimpleName()).isEqualTo("NaturalOrderComparator");
         assertThat(richestCustomer.get()).isEqualTo(12000);
@@ -46,8 +55,9 @@ class Exercise03 extends OnlineStore {
     void youngest_customer() {
         List<Customer> customerList = mall.getCustomers();
 
-        Comparator<Customer> comparator = null;
-        Optional<Customer> youngestCustomer = null;
+        Comparator<Customer> comparator = Comparator.comparing(Customer::getAge);
+        Optional<Customer> youngestCustomer = customerList.stream()
+                .min(comparator);
 
         assertThat(youngestCustomer.get()).isEqualTo(customerList.get(8));
     }
